@@ -65,10 +65,21 @@ export const filesAPI = {
             headers: { 'Content-Type': 'multipart/form-data' },
             onUploadProgress: onProgress,
         }),
-    getFiles: () => api.get('/files'),
+    getFiles: (folderId = null, sortBy = 'upload_date', sortOrder = 'desc') =>
+        api.get('/files', { params: { folderId, sortBy, sortOrder } }),
     downloadFile: (id) => api.get(`/files/download/${id}`, { responseType: 'blob' }),
     deleteFile: (id) => api.delete(`/files/${id}`),
     renameFile: (id, newName) => api.put(`/files/rename/${id}`, { newName }),
+    moveFile: (id, folderId) => api.put(`/files/${id}/move`, { folderId }),
+    searchFiles: (query) => api.get('/files/search', { params: { q: query } }),
+};
+
+// Folders API
+export const foldersAPI = {
+    createFolder: (name, parentId = null) => api.post('/files/folders', { name, parentId }),
+    getFolders: (parentId = null) => api.get('/files/folders', { params: { parentId } }),
+    deleteFolder: (id) => api.delete(`/files/folders/${id}`),
+    renameFolder: (id, newName) => api.put(`/files/folders/${id}/rename`, { newName }),
 };
 
 export default api;
